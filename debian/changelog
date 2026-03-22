@@ -2,4 +2,4 @@ bitwarden (2026.2.1) stable; urgency=low
 
   * Packaged Bitwarden Desktop 2026.2.1 for ARM64 (Linux)
 
- -- Packager <packager@example.com>  Sun, 22 Mar 2026 00:00:00 +0000
+ -- Matthias Fleckenstein <internet@fleckenstein-cloud.de>  Sun, 22 Mar 2026 00:00:00 +0000

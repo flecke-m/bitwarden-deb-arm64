@@ -6,7 +6,7 @@ BITWARDEN_VERSION="2026.2.1"
 ARCH="arm64"
 PKG_NAME="bitwarden"
 INSTALL_PREFIX="/opt/Bitwarden"
-MAINTAINER="Packager <packager@example.com>"
+MAINTAINER="Matthias Fleckenstein <internet@fleckenstein-cloud.de>"
 
 # ─── Derived variables ────────────────────────────────────────────────────────
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
