@@ -1,0 +1,13 @@
+Package: bitwarden
+Version: @@VERSION@@
+Architecture: @@ARCH@@
+Maintainer: @@MAINTAINER@@
+Installed-Size: @@INSTALLED_SIZE@@
+Depends: libgtk-3-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libatspi2.0-0, libdrm2, libgbm1, libsecret-1-0
+Section: utils
+Priority: optional
+Homepage: https://bitwarden.com
+Description: Bitwarden - Free Password Manager
+ Bitwarden is a free and open source password management solution
+ for individuals, teams, and business organizations. Store, share,
+ and sync sensitive data across unlimited devices from any location.
