@@ -28,9 +28,14 @@ curl -fL --progress-bar "${TAR_URL}" -o "${BUILD_DIR}/bitwarden.tar.gz"
 echo "==> Extracting archive..."
 tar -xzf "${BUILD_DIR}/bitwarden.tar.gz" -C "${BUILD_DIR}/extract"
 
-# Locate extracted content (handle both flat extract and single-subdir extract)
-EXTRACT_SRC=$(find "${BUILD_DIR}/extract" -maxdepth 1 -mindepth 1 -type d | head -1)
-if [ -z "${EXTRACT_SRC}" ]; then
+# Locate extracted content:
+# - If the archive is a single-directory tarball (no files at depth 1), descend into it.
+# - Otherwise (flat archive — files sit at root level), use the extract dir directly.
+FILE_COUNT=$(find "${BUILD_DIR}/extract" -maxdepth 1 -mindepth 1 -type f | wc -l)
+DIR_COUNT=$(find "${BUILD_DIR}/extract" -maxdepth 1 -mindepth 1 -type d | wc -l)
+if [ "${FILE_COUNT}" -eq 0 ] && [ "${DIR_COUNT}" -eq 1 ]; then
+    EXTRACT_SRC=$(find "${BUILD_DIR}/extract" -maxdepth 1 -mindepth 1 -type d | head -1)
+else
     EXTRACT_SRC="${BUILD_DIR}/extract"
 fi
 
@@ -58,6 +63,7 @@ chmod 755 "${PKG_DIR}/usr/bin/${PKG_NAME}"
 for icon_size in 16 32 64 128 256 512 1024; do
     mkdir -p "${PKG_DIR}/usr/share/icons/hicolor/${icon_size}x${icon_size}/apps"
     for icon_path in \
+        "${PKG_DIR}${INSTALL_PREFIX}/resources/icons/${icon_size}x${icon_size}.png" \
         "${PKG_DIR}${INSTALL_PREFIX}/icons/${icon_size}x${icon_size}.png" \
         "${PKG_DIR}${INSTALL_PREFIX}/resources/app.asar.unpacked/apps/desktop/build/icons/${icon_size}x${icon_size}.png" \
         "${PKG_DIR}${INSTALL_PREFIX}/${icon_size}x${icon_size}.png" \
@@ -93,10 +99,8 @@ chmod 755 "${PKG_DIR}/usr/bin/${PKG_NAME}"
 
 # Make ELF binaries and shared libraries executable
 find "${PKG_DIR}${INSTALL_PREFIX}" -type f \( -name "*.so" -o -name "*.so.*" \) -exec chmod 755 {} \;
-# Make the main executable and helper binaries executable
-for bin in bitwarden chrome-sandbox crashpad_handler; do
-    [ -f "${PKG_DIR}${INSTALL_PREFIX}/${bin}" ] && chmod 755 "${PKG_DIR}${INSTALL_PREFIX}/${bin}" || true
-done
+# Make ELF binaries at the root of the install prefix executable (files without extension)
+find "${PKG_DIR}${INSTALL_PREFIX}" -maxdepth 1 -type f ! -name '*.*' -exec chmod 755 {} \;
 
 # ─── DEBIAN/control ───────────────────────────────────────────────────────────
 INSTALLED_SIZE=$(du -sk "${PKG_DIR}" | awk '{print $1}')
