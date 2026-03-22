@@ -55,8 +55,10 @@ WRAPPER
 chmod 755 "${PKG_DIR}/usr/bin/${PKG_NAME}"
 
 # ─── Icons ────────────────────────────────────────────────────────────────────
-for icon_size in 256 512; do
+for icon_size in 16 32 64 128 256 512 1024; do
+    mkdir -p "${PKG_DIR}/usr/share/icons/hicolor/${icon_size}x${icon_size}/apps"
     for icon_path in \
+        "${PKG_DIR}${INSTALL_PREFIX}/icons/${icon_size}x${icon_size}.png" \
         "${PKG_DIR}${INSTALL_PREFIX}/resources/app.asar.unpacked/apps/desktop/build/icons/${icon_size}x${icon_size}.png" \
         "${PKG_DIR}${INSTALL_PREFIX}/${icon_size}x${icon_size}.png" \
         "${PKG_DIR}${INSTALL_PREFIX}/bitwarden.png"; do
